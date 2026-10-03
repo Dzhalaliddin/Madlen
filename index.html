@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Оцените нашу кофейню</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --madlen-olive: #7a8033;
+    --madlen-olive-soft: #99a04a;
+    --madlen-cream: #f7f8ed;
+    --text-dark: #1a1a1a;
+    --text-mid: #5a5a5a;
+    --text-light: #9a9a9a;
+    --border: #ececec;
+    --surface: #ffffff;
+    --error: #d9534f;
+    --error-bg: #fdf2f2;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: linear-gradient(160deg, #99a04a 0%, #7a8033 45%, #5c6124 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -25%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    background: var(--surface);
+    color: var(--text-dark);
+    border-radius: 26px;
+    padding: 34px 32px 30px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow:
+      0 30px 80px rgba(60, 65, 20, 0.35),
+      0 0 0 1px rgba(255,255,255,0.4);
+    animation: cardIn .7s cubic-bezier(.16,1,.3,1) both;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(24px) scale(.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .lang-switch {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    gap: 2px;
+    background: #f4f4f4;
+    border-radius: 10px;
+    padding: 3px;
+    z-index: 2;
+  }
+
+  .lang-btn {
+    font-family: inherit;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-mid);
+    cursor: pointer;
+    transition: all .2s;
+  }
+
+  .lang-btn:hover { color: var(--madlen-olive); }
+
+  .lang-btn.active {
+    background: #fff;
+    color: var(--madlen-olive);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  }
+
+  .header { text-align: center; margin-bottom: 22px; }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+
+  .logo-img {
+    width: 180px;
+    height: auto;
+    display: block;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+  }
+
+  .header p {
+    font-size: 14px;
+    color: var(--text-mid);
+    line-height: 1.5;
+  }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 22px 0;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .select-wrap {
+    position: relative;
+    margin-bottom: 8px;
+  }
+
+  .select-wrap::after {
+    content: '';
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--madlen-olive);
+    border-bottom: 2px solid var(--madlen-olive);
+    pointer-events: none;
+    margin-top: -3px;
+  }
+
+  .location-select {
+    width: 100%;
+    padding: 15px 44px 15px 18px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-dark);
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: all .25s;
+  }
+
+  .location-select:hover,
+  .location-select:focus {
+    border-color: var(--madlen-olive);
+    background: var(--madlen-cream);
+  }
+
+  .location-address {
+    font-size: 12.5px;
+    color: var(--text-mid);
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 22px;
+    min-height: 18px;
+    line-height: 1.4;
+    transition: color .2s;
+  }
+
+  .location-address.active {
+    color: var(--madlen-olive);
+    font-weight: 600;
+  }
+
+  .rating-block {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transition: opacity .4s ease, max-height .5s ease;
+  }
+
+  .rating-block.enabled {
+    opacity: 1;
+    max-height: 1400px;
+    pointer-events: auto;
+  }
+
+  .stars {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: 6px 0 10px;
+    user-select: none;
+  }
+
+  .star {
+    font-size: 42px;
+    line-height: 1;
+    cursor: pointer;
+    color: #e6e6e6;
+    background: none;
+    border: none;
+    padding: 4px;
+    transition: transform .18s cubic-bezier(.34,1.56,.64,1), color .2s;
+  }
+
+  .star:hover { transform: scale(1.18) translateY(-2px); }
+
+  .star.active {
+    color: #f5b800;
+    filter: drop-shadow(0 4px 8px rgba(245,184,0,0.35));
+  }
+
+  .hint {
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--text-light);
+    min-height: 20px;
+    margin-bottom: 18px;
+    transition: color .2s;
+  }
+
+  .hint.filled { color: var(--madlen-olive); font-weight: 600; }
+
+  .complaint-block {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transition: opacity .35s ease, max-height .7s ease;
+    margin-bottom: 0;
+  }
+
+  .complaint-block.enabled {
+    opacity: 1;
+    max-height: 1000px;
+    pointer-events: auto;
+    margin-bottom: 14px;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-mid);
+    margin-bottom: 8px;
+    padding-left: 4px;
+  }
+
+  .field-label .required {
+    color: var(--error);
+    font-weight: 700;
+    margin-left: 2px;
+  }
+
+  .field-input,
+  .field-textarea {
+    width: 100%;
+    padding: 13px 16px;
+    font-family: inherit;
+    font-size: 14.5px;
+    color: var(--text-dark);
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    outline: none;
+    transition: all .25s;
+    line-height: 1.45;
+  }
+
+  .field-input { margin-bottom: 4px; }
+
+  .field-gap { margin-bottom: 14px; }
+
+  .field-textarea {
+    min-height: 90px;
+    resize: vertical;
+    margin-bottom: 0;
+  }
+
+  .field-input:focus,
+  .field-textarea:focus {
+    border-color: var(--madlen-olive);
+    background: var(--madlen-cream);
+  }
+
+  .field-input.error,
+  .field-textarea.error {
+    border-color: var(--error);
+    background: var(--error-bg);
+  }
+
+  .field-error {
+    font-size: 12px;
+    color: var(--error);
+    font-weight: 600;
+    padding-left: 4px;
+    margin-bottom: 0;
+    min-height: 0;
+    line-height: 1.3;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity .2s, max-height .25s, margin .2s;
+  }
+
+  .field-error.visible {
+    opacity: 1;
+    max-height: 40px;
+    margin-bottom: 12px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 16px;
+    font-family: inherit;
+    font-size: 15.5px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--madlen-olive-soft), var(--madlen-olive));
+    color: #fff;
+    cursor: pointer;
+    transition: all .25s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 8px 20px rgba(122,128,51,0.35);
+  }
+
+  .btn:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(122,128,51,0.5);
+    background: linear-gradient(135deg, var(--madlen-olive), #5c6124);
+  }
+
+  .btn:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .status {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 14px;
+    min-height: 22px;
+    line-height: 1.4;
+    transition: opacity .25s;
+  }
+
+  .status.sending { color: var(--text-mid); }
+  .status.success { color: var(--madlen-olive); }
+  .status.error   { color: var(--error); }
+
+  .note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 18px;
+    line-height: 1.55;
+  }
+
+  @media (max-width: 480px) {
+    .card { padding: 28px 22px 24px; border-radius: 22px; }
+    .header h1 { font-size: 22px; }
+    .logo-img { width: 150px; }
+    .star { font-size: 38px; }
+    .location-select { font-size: 14.5px; padding: 14px 40px 14px 16px; }
+    .lang-switch { top: 12px; right: 12px; }
+    .lang-btn { padding: 5px 8px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="lang-switch">
+    <button class="lang-btn" data-lang="kz">ҚАЗ</button>
+    <button class="lang-btn active" data-lang="ru">РУС</button>
+    <button class="lang-btn" data-lang="en">ENG</button>
+  </div>
+
+  <div class="header">
+    <div class="logo">
+      <img src="logo.png" alt="MADLEN" class="logo-img">
+    </div>
+    <h1 data-i18n="title">Оцените нашу кофейню</h1>
+    <p data-i18n="subtitle">Выберите локацию и поставьте оценку</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <p class="section-label" data-i18n="chooseLocation">Выберите локацию</p>
+
+  <div class="select-wrap">
+    <select class="location-select" id="locationSelect">
+      <option value="" data-i18n="selectPlaceholder">— Выберите локацию —</option>
+      <option value="tolebi"      data-ru="Толе би, 41"                            data-en="Tole bi St, 41">Толе би, 41</option>
+      <option value="mkr16"       data-ru="16-й микрорайон, 37"                     data-en="16th Microdistrict, 37">16-й микрорайон, 37</option>
+      <option value="plaza"       data-ru="ТЦ Shymkent Plaza, Аль-Фараби 3/1"       data-en="Shymkent Plaza Mall, Al-Farabi 3/1">ТЦ Shymkent Plaza, Аль-Фараби 3/1</option>
+      <option value="argynbekova" data-ru="Аргынбекова, 29/4 к2"                    data-en="Argynbekov St, 29/4 bldg 2">Аргынбекова, 29/4 к2</option>
+      <option value="baidibek"    data-ru="Байдибек би, 362/7 (Шым Сити)"           data-en="Baidibek bi Ave, 362/7 (Shym City)">Байдибек би, 362/7 (Шым Сити)</option>
+      <option value="airport"     data-ru="Аэропорт, Бакбаева 17/8"                 data-en="Airport, Bakbaev St 17/8">Аэропорт, Бакбаева 17/8</option>
+      <option value="gagarina"    data-ru="Гагарина, 1а/1 (Колос)"                  data-en="Gagarin St, 1a/1 (Kolos)">Гагарина, 1а/1 (Колос)</option>
+      <option value="hyperhouse"  data-ru="ТРЦ Hyper house, Дулати 202"             data-en="Hyper House Mall, Dulati 202">ТРЦ Hyper house, Дулати 202</option>
+      <option value="kazieva"     data-ru="Казиева, 12а/1"                          data-en="Kaziev St, 12a/1">Казиева, 12а/1</option>
+      <option value="nursat115"   data-ru="Нурсат, 115"                             data-en="Nursat, 115">Нурсат, 115</option>
+      <option value="nursat172"   data-ru="Нурсат, 172а (Бакыт)"                    data-en="Nursat, 172a (Bakyt)">Нурсат, 172а (Бакыт)</option>
+      <option value="nursat2"     data-ru="Нурсат, 2"                               data-en="Nursat, 2">Нурсат, 2</option>
+      <option value="respublika"  data-ru="пр. Республики, 6а"                      data-en="Respublika Ave, 6a">пр. Республики, 6а</option>
+      <option value="ryskulova"   data-ru="Рыскулова, 26"                           data-en="Ryskulov St, 26">Рыскулова, 26</option>
+      <option value="sportivny"   data-ru="Спортивный, 24"                          data-en="Sportivny, 24">Спортивный, 24</option>
+      <option value="yangi"       data-ru="Тамерлановское шоссе, 28 (Янги Шахар)"   data-en="Tamerlan Highway, 28 (Yangi Shachar)">Тамерлановское шоссе, 28 (Янги Шахар)</option>
+      <option value="kenbaba"     data-ru="Тауке хана, 37/3 (Кен Баба)"             data-en="Tauke Khan Ave, 37/3 (Ken Baba)">Тауке хана, 37/3 (Кен Баба)</option>
+      <option value="ualikhanova" data-ru="Уалиханова, 192/1 (11 мкр)"              data-en="Ualikhanov St, 192/1 (11th microdistrict)">Уалиханова, 192/1 (11 мкр)</option>
+    </select>
+  </div>
+
+  <p class="location-address" id="locationAddress"></p>
+
+  <div class="rating-block" id="ratingBlock">
+    <p class="section-label" data-i18n="yourRating">Ваша оценка</p>
+    <div class="stars" id="stars">
+      <button class="star" data-value="1">★</button>
+      <button class="star" data-value="2">★</button>
+      <button class="star" data-value="3">★</button>
+      <button class="star" data-value="4">★</button>
+      <button class="star" data-value="5">★</button>
+    </div>
+    <p class="hint" id="hint" data-i18n="hint">Нажмите на звезду</p>
+
+    <div class="complaint-block" id="complaintBlock">
+      <label class="field-label" for="nameInput">
+        <span data-i18n="nameLabel">Ваше имя</span>
+        <span class="required">*</span>
+      </label>
+      <input type="text" class="field-input field-gap" id="nameInput" autocomplete="name">
+      <p class="field-error" id="nameError"></p>
+
+      <label class="field-label" for="phoneInput">
+        <span data-i18n="phoneLabel">Ваш телефон</span>
+        <span class="required">*</span>
+      </label>
+      <input type="tel" class="field-input field-gap" id="phoneInput" autocomplete="tel">
+      <p class="field-error" id="phoneError"></p>
+
+      <label class="field-label" for="complaintText" data-i18n="complaintLabel">
+        Опишите, что не понравилось
+      </label>
+      <textarea class="field-textarea" id="complaintText"></textarea>
+    </div>
+
+    <button class="btn" id="submit" disabled data-i18n="submit">Отправить</button>
+    <p class="status" id="status"></p>
+  </div>
+
+  <p class="note" data-i18n="note">Спасибо, что помогаете нам стать лучше</p>
+</div>
+
+<script>
+  const BOT_TOKEN = "8866135340:AAHVRF407LI0y5_AMEOr0QbZ4zYrAMSPcQI";
+  const CHAT_ID   = "-1004363461887";
+
+  const TRANSLATIONS = {
+    ru: {
+      title: "Оцените нашу кофейню",
+      subtitle: "Выберите локацию и поставьте оценку",
+      chooseLocation: "Выберите локацию",
+      selectPlaceholder: "— Выберите локацию —",
+      yourRating: "Ваша оценка",
+      hint: "Нажмите на звезду",
+      nameLabel: "Ваше имя",
+      phoneLabel: "Ваш телефон",
+      nameErrorEmpty: "Укажите ваше имя",
+      nameErrorShort: "Имя должно быть не короче 2 символов",
+      phoneErrorEmpty: "Укажите ваш телефон",
+      phoneErrorShort: "Проверьте формат телефона (минимум 10 цифр)",
+      complaintLabel: "Опишите, что не понравилось",
+      submit: "Отправить",
+      sending: "Отправляем...",
+      successComplaint: "Спасибо! Ваша жалоба отправлена руководителю.",
+      error: "Не удалось отправить. Попробуйте ещё раз.",
+      note: "Спасибо, что помогаете нам стать лучше",
+      ratingSet: (n) => `Вы поставили ${n} ${pluralRu(n)}`
+    },
+    kz: {
+      title: "Кофейнямызды бағалаңыз",
+      subtitle: "Локацияны таңдап, баға қойыңыз",
+      chooseLocation: "Локацияны таңдаңыз",
+      selectPlaceholder: "— Локацияны таңдаңыз —",
+      yourRating: "Сіздің бағаңыз",
+      hint: "Жұлдызға басыңыз",
+      nameLabel: "Атыңыз",
+      phoneLabel: "Телефоныңыз",
+      nameErrorEmpty: "Атыңызды көрсетіңіз",
+      nameErrorShort: "Аты кемінде 2 таңбадан тұруы керек",
+      phoneErrorEmpty: "Телефоныңызды көрсетіңіз",
+      phoneErrorShort: "Телефон форматын тексеріңіз (кемінде 10 цифр)",
+      complaintLabel: "Не ұнамағанын сипаттаңыз",
+      submit: "Жіберу",
+      sending: "Жіберілуде...",
+      successComplaint: "Рақмет! Шағымыңыз басшыға жіберілді.",
+      error: "Жіберу мүмкін болмады. Қайта көріңіз.",
+      note: "Бізді жақсартуға көмектескеніңізге рақмет",
+      ratingSet: (n) => `Сіз ${n} жұлдыз қойдыңыз`
+    },
+    en: {
+      title: "Rate our coffee shop",
+      subtitle: "Choose a location and leave your rating",
+      chooseLocation: "Choose a location",
+      selectPlaceholder: "— Choose a location —",
+      yourRating: "Your rating",
+      hint: "Tap a star",
+      nameLabel: "Your name",
+      phoneLabel: "Your phone",
+      nameErrorEmpty: "Please enter your name",
+      nameErrorShort: "Name must be at least 2 characters",
+      phoneErrorEmpty: "Please enter your phone",
+      phoneErrorShort: "Check the phone format (at least 10 digits)",
+      complaintLabel: "Describe what went wrong",
+      submit: "Submit",
+      sending: "Sending...",
+      successComplaint: "Thank you! Your complaint has been sent to the manager.",
+      error: "Could not send. Please try again.",
+      note: "Thank you for helping us improve",
+      ratingSet: (n) => `You rated ${n} ${n === 1 ? "star" : "stars"}`
+    }
+  };
+
+  function pluralRu(n) {
+    if (n === 1) return "звезду";
+    if (n >= 2 && n <= 4) return "звезды";
+    return "звёзд";
+  }
+
+  const LOCATION_LINKS = {
+    tolebi:      "https://go.2gis.com/2uSKU",
+    mkr16:       "https://go.2gis.com/o8nmB",
+    plaza:       "https://go.2gis.com/VxFmU",
+    argynbekova: "https://go.2gis.com/9vyl7",
+    baidibek:    "https://go.2gis.com/OVPrs",
+    airport:     "https://go.2gis.com/JhCyZ",
+    gagarina:    "https://go.2gis.com/PNbeL",
+    hyperhouse:  "https://go.2gis.com/6x0y8",
+    kazieva:     "https://go.2gis.com/oM6Yz",
+    nursat115:   "https://go.2gis.com/8MzIr",
+    nursat172:   "https://go.2gis.com/W192v",
+    nursat2:     "https://go.2gis.com/5hLMg",
+    respublika:  "https://go.2gis.com/gHMwL",
+    ryskulova:   "https://go.2gis.com/WT0K8",
+    sportivny:   "https://go.2gis.com/SjyDp",
+    yangi:       "https://go.2gis.com/g7ZYE",
+    kenbaba:     "https://go.2gis.com/WnTnv",
+    ualikhanova: "https://go.2gis.com/cXPWC"
+  };
+
+  function buildTelegramMessage(location, rating, name, phone, text) {
+    const stars = "⭐️".repeat(rating);
+    const now = new Date();
+    const pad = (v) => String(v).padStart(2, "0");
+    const dateStr = `${pad(now.getDate())}.${pad(now.getMonth() + 1)}.${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+    return (
+      `${stars}\n` +
+      `Источник: Сайт\n` +
+      `Адрес: ${location}\n` +
+      `Автор: ${name}\n` +
+      `Телефон: ${phone}\n` +
+      `Дата: ${dateStr}\n` +
+      `Отзыв: \n\n` +
+      `${text || "—"}`
+    );
+  }
+
+  let currentLang = "ru";
+
+  const locationSelect  = document.getElementById("locationSelect");
+  const locationAddress = document.getElementById("locationAddress");
+  const ratingBlock     = document.getElementById("ratingBlock");
+  const stars           = document.querySelectorAll(".star");
+  const hint            = document.getElementById("hint");
+  const submitBtn       = document.getElementById("submit");
+  const complaintBlock  = document.getElementById("complaintBlock");
+  const complaintText   = document.getElementById("complaintText");
+  const nameInput       = document.getElementById("nameInput");
+  const phoneInput      = document.getElementById("phoneInput");
+  const nameError       = document.getElementById("nameError");
+  const phoneError      = document.getElementById("phoneError");
+  const statusEl        = document.getElementById("status");
+
+  let selectedLocation = null;
+  let rating = 0;
+  let isSending = false;
+
+  /* === ОБНОВИТЬ ТЕКСТ ОПЦИЙ ЛОКАЦИЙ ===
+     RU и KZ — русский текст
+     EN — транслитерация
+  */
+  function refreshLocationOptions() {
+    locationSelect.querySelectorAll("option[data-ru]").forEach(opt => {
+      if (currentLang === "en") {
+        opt.textContent = opt.dataset.en || opt.dataset.ru;
+      } else {
+        opt.textContent = opt.dataset.ru;
+      }
+    });
+  }
+
+  /* === ПОЛУЧИТЬ НАЗВАНИЕ ЛОКАЦИИ ДЛЯ ТЕКУЩЕГО ЯЗЫКА === */
+  function getLocationName(key) {
+    const opt = locationSelect.querySelector(`option[value="${key}"]`);
+    if (!opt) return "";
+
+    if (currentLang === "en") {
+      return opt.dataset.en || opt.dataset.ru || "";
+    }
+    return opt.dataset.ru || "";
+  }
+
+  const langButtons = document.querySelectorAll(".lang-btn");
+  langButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      currentLang = btn.dataset.lang;
+      langButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      applyLanguage();
+    });
+  });
+
+  function applyLanguage() {
+    const t = TRANSLATIONS[currentLang];
+
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const key = el.dataset.i18n;
+      if (t[key]) el.textContent = t[key];
+    });
+
+    refreshLocationOptions();
+
+    if (selectedLocation) {
+      locationAddress.textContent = getLocationName(selectedLocation);
+    }
+
+    if (rating > 0) {
+      hint.textContent = t.ratingSet(rating);
+    } else {
+      hint.textContent = t.hint;
+    }
+
+    document.documentElement.lang = currentLang === "kz" ? "kk" : currentLang;
+
+    if (nameError.classList.contains("visible")) {
+      nameError.textContent = nameInput.value.trim() ? t.nameErrorShort : t.nameErrorEmpty;
+    }
+    if (phoneError.classList.contains("visible")) {
+      phoneError.textContent = phoneInput.value.trim() ? t.phoneErrorShort : t.phoneErrorEmpty;
+    }
+  }
+
+  locationSelect.addEventListener("change", () => {
+    const key = locationSelect.value;
+
+    if (!key) {
+      selectedLocation = null;
+      locationAddress.textContent = "";
+      locationAddress.classList.remove("active");
+      ratingBlock.classList.remove("enabled");
+      checkReady();
+      return;
+    }
+
+    selectedLocation = key;
+    locationAddress.textContent = getLocationName(key);
+    locationAddress.classList.add("active");
+    ratingBlock.classList.add("enabled");
+    checkReady();
+  });
+
+  stars.forEach(star => {
+    star.addEventListener("click", () => {
+      rating = parseInt(star.dataset.value, 10);
+      updateStars(rating);
+      hint.textContent = TRANSLATIONS[currentLang].ratingSet(rating);
+      hint.classList.add("filled");
+
+      if (rating <= 3) {
+        complaintBlock.classList.add("enabled");
+      } else {
+        complaintBlock.classList.remove("enabled");
+        complaintText.value = "";
+        nameInput.value = "";
+        phoneInput.value = "";
+        clearNameError();
+        clearPhoneError();
+      }
+
+      checkReady();
+    });
+    star.addEventListener("mouseenter", () => updateStars(parseInt(star.dataset.value, 10)));
+  });
+
+  document.getElementById("stars").addEventListener("mouseleave", () => updateStars(rating));
+
+  function updateStars(value) {
+    stars.forEach(s => {
+      s.classList.toggle("active", parseInt(s.dataset.value, 10) <= value);
+    });
+  }
+
+  phoneInput.addEventListener("input", () => {
+    const value = phoneInput.value;
+    const digits = value.replace(/\D/g, "");
+
+    if (digits.length >= 10 && digits.length <= 11) {
+      phoneInput.value = formatKZPhone(digits);
+    }
+
+    if (phoneInput.classList.contains("error")) {
+      clearPhoneError();
+      checkReady();
+    }
+  });
+
+  function formatKZPhone(digits) {
+    let d = digits;
+    if (d.startsWith("8") && d.length === 11) d = "7" + d.slice(1);
+    if (d.length === 10) d = "7" + d;
+    if (d.length !== 11) return digits;
+
+    return `+${d[0]} ${d.slice(1, 4)} ${d.slice(4, 7)} ${d.slice(7, 9)} ${d.slice(9, 11)}`;
+  }
+
+  function validateName() {
+    const t = TRANSLATIONS[currentLang];
+    const value = nameInput.value.trim();
+
+    if (!value) return { ok: false, msg: t.nameErrorEmpty };
+    if (value.length < 2) return { ok: false, msg: t.nameErrorShort };
+    return { ok: true };
+  }
+
+  function showNameError(msg) {
+    nameError.textContent = msg;
+    nameError.classList.add("visible");
+    nameInput.classList.add("error");
+  }
+
+  function clearNameError() {
+    nameError.textContent = "";
+    nameError.classList.remove("visible");
+    nameInput.classList.remove("error");
+  }
+
+  nameInput.addEventListener("input", () => {
+    if (nameInput.classList.contains("error")) {
+      clearNameError();
+      checkReady();
+    }
+  });
+
+  nameInput.addEventListener("blur", () => {
+    if (rating > 0 && rating <= 3 && nameInput.value.trim()) {
+      const v = validateName();
+      if (!v.ok) showNameError(v.msg);
+      else clearNameError();
+      checkReady();
+    }
+  });
+
+  function validatePhone() {
+    const t = TRANSLATIONS[currentLang];
+    const value = phoneInput.value.trim();
+
+    if (!value) return { ok: false, msg: t.phoneErrorEmpty };
+
+    const digits = value.replace(/\D/g, "");
+    if (digits.length < 10) return { ok: false, msg: t.phoneErrorShort };
+
+    return { ok: true };
+  }
+
+  function showPhoneError(msg) {
+    phoneError.textContent = msg;
+    phoneError.classList.add("visible");
+    phoneInput.classList.add("error");
+  }
+
+  function clearPhoneError() {
+    phoneError.textContent = "";
+    phoneError.classList.remove("visible");
+    phoneInput.classList.remove("error");
+  }
+
+  phoneInput.addEventListener("blur", () => {
+    if (rating > 0 && rating <= 3 && phoneInput.value.trim()) {
+      const v = validatePhone();
+      if (!v.ok) showPhoneError(v.msg);
+      else clearPhoneError();
+      checkReady();
+    }
+  });
+
+  function checkReady() {
+    if (rating > 0 && rating <= 3) {
+      const nv = validateName();
+      const pv = validatePhone();
+      submitBtn.disabled = isSending || !(selectedLocation && nv.ok && pv.ok);
+    } else {
+      submitBtn.disabled = isSending || !(selectedLocation && rating > 0);
+    }
+  }
+
+  submitBtn.addEventListener("click", async () => {
+    if (!selectedLocation || !rating || isSending) return;
+
+    const t = TRANSLATIONS[currentLang];
+    const locationName = getLocationName(selectedLocation);
+
+    if (rating >= 4) {
+      const link = LOCATION_LINKS[selectedLocation];
+      window.open(link, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    const nv = validateName();
+    const pv = validatePhone();
+
+    if (!nv.ok) { showNameError(nv.msg); }
+    if (!pv.ok) { showPhoneError(pv.msg); }
+    if (!nv.ok || !pv.ok) { checkReady(); return; }
+
+    const name = nameInput.value.trim();
+    const phone = formatKZPhone(phoneInput.value.replace(/\D/g, ""));
+
+    isSending = true;
+    checkReady();
+    statusEl.className = "status sending";
+    statusEl.textContent = t.sending;
+
+    const message = buildTelegramMessage(
+      locationName,
+      rating,
+      name,
+      phone,
+      complaintText.value.trim()
+    );
+
+    try {
+      const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: message
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.ok) {
+        statusEl.className = "status success";
+        statusEl.textContent = t.successComplaint;
+
+        setTimeout(() => {
+          locationSelect.value = "";
+          locationAddress.textContent = "";
+          locationAddress.classList.remove("active");
+          ratingBlock.classList.remove("enabled");
+          complaintBlock.classList.remove("enabled");
+          complaintText.value = "";
+          nameInput.value = "";
+          phoneInput.value = "";
+          clearNameError();
+          clearPhoneError();
+          selectedLocation = null;
+          rating = 0;
+          updateStars(0);
+          hint.textContent = t.hint;
+          hint.classList.remove("filled");
+          statusEl.textContent = "";
+          statusEl.className = "status";
+          isSending = false;
+          checkReady();
+        }, 2500);
+      } else {
+        throw new Error(data.description || "Telegram API error");
+      }
+    } catch (err) {
+      console.error(err);
+      statusEl.className = "status error";
+      statusEl.textContent = t.error;
+      isSending = false;
+      checkReady();
+    }
+  });
+
+  applyLanguage();
+</script>
+
+</body>
+</html>
